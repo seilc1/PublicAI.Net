@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<PackageId>PublicAI.Net</PackageId>
+		<Version>0.1.0</Version>
+		<Authors>Christoph Seiler</Authors>
+		<Description>.NET Library to work with public AI (Apertus).</Description>
+	</PropertyGroup>
+
+	<PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
