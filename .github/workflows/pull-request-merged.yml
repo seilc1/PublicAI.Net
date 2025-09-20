@@ -9,6 +9,8 @@ jobs:
   bump-version:
     if: github.event.pull_request.merged == true || startsWith(github.event.head_commit.message, 'Merge pull request')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       PROJECT_FILE: PublicAI.Net/PublicAI.Net.csproj
 
