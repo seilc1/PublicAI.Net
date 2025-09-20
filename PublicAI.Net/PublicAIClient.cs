@@ -18,6 +18,10 @@ public class PublicAIClient
         Converters = { new JsonStringEnumConverter() }
     };
 
+    public PublicAIClient(PublicAIClientSettings settings)
+        : this(settings, new HttpClient())
+    { }
+
     public PublicAIClient(PublicAIClientSettings settings, HttpClient httpClient)
     {
         _settings = settings;

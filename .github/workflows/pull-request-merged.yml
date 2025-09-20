@@ -1,0 +1,46 @@
+name: Pull Request Merged
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged == true || startsWith(github.event.head_commit.message, 'Merge pull request')
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_FILE: PublicAI.Net/PublicAI.Net.csproj
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v1
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v1
+
+      - name: Update csproj with calculated version
+        run: |
+          sed -i "s|<Version>.*</Version>|<Version>${{ steps.gitversion.outputs.FullSemVer }}</Version>|" "$PROJECT_FILE"
+          sed -i "s|<AssemblyVersion>.*</AssemblyVersion>|<AssemblyVersion>${{ steps.gitversion.outputs.AssemblySemVer }}</AssemblyVersion>|" "$PROJECT_FILE"
+          sed -i "s|<FileVersion>.*</FileVersion>|<FileVersion>${{ steps.gitversion.outputs.AssemblySemFileVer }}</FileVersion>|" "$PROJECT_FILE"
+
+      - name: Commit updated version
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -am "Set version to ${{ steps.gitversion.outputs.FullSemVer }}"
+          git push
+
+      - name: Create tag
+        run: |
+          git tag v${{ steps.gitversion.outputs.FullSemVer }}
+          git push origin v${{ steps.gitversion.outputs.FullSemVer }}
