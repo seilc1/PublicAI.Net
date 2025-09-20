@@ -5,9 +5,12 @@ on:
     tags:
       - 'v*.*.*'
 
+
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+        contents: write
     env:
       PROJECT_FILE: PublicAI.Net/PublicAI.Net.csproj
 
