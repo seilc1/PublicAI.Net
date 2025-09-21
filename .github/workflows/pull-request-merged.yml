@@ -1,4 +1,4 @@
-name: Pull Request Merged
+﻿name: Pull Request Merged
 
 on:
   push:
@@ -35,6 +35,17 @@ jobs:
           sed -i "s|<AssemblyVersion>.*</AssemblyVersion>|<AssemblyVersion>${{ steps.gitversion.outputs.AssemblySemVer }}</AssemblyVersion>|" "$PROJECT_FILE"
           sed -i "s|<FileVersion>.*</FileVersion>|<FileVersion>${{ steps.gitversion.outputs.AssemblySemFileVer }}</FileVersion>|" "$PROJECT_FILE"
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
       - name: Commit updated version
         run: |
           git config user.name "github-actions"
@@ -46,3 +57,22 @@ jobs:
         run: |
           git tag v${{ steps.gitversion.outputs.FullSemVer }}
           git push origin v${{ steps.gitversion.outputs.FullSemVer }}
+
+      - name: Pack
+        run: dotnet pack "$PROJECT_FILE" --configuration Release --no-build -o ./artifacts /p:PackageVersion=${{ steps.gitversion.outputs.NuGetVersion }}
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.gitversion.outputs.FullSemVer }}
+          name: Release ${{ steps.gitversion.outputs.FullSemVer }}
+          body: |
+            📦 NuGet package version **${{ steps.gitversion.outputs.NuGetVersion }}** published.
+
+            Commit: ${{ github.sha }}
+          files: ./artifacts/*.nupkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
