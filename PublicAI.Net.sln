@@ -17,7 +17,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{92923D21-0C6F-4DB8-9F3B-BAAF46FD7542}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\pull-request-merged.yml = .github\workflows\pull-request-merged.yml
-		.github\workflows\release.yml = .github\workflows\release.yml
 		.github\workflows\pull-request-validation.yml = .github\workflows\pull-request-validation.yml
 	EndProjectSection
 EndProject
