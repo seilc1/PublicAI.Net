@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<PackageId>PublicAI.Net</PackageId>
-		<Version>0.1.1+2</Version>
+		<Version>0.1.2+2</Version>
 		<Authors>Christoph Seiler</Authors>
 		<Description>.NET Library to work with public AI (Apertus).</Description>
 		<PackageProjectUrl>https://github.com/seilc1/PublicAI.Net</PackageProjectUrl>
